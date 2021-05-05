@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>HOME PAGE</h1>
+  {% for restaurant in restaurants %}
+    <p>
+      {{ restaurant.name }}
+    </p>
+  {% empty %}
+    <p>There are no records to show</p>
+  {% endfor %}
+{% endblock content %}
