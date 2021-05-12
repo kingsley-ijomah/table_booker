@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Book Restaurant</h1>
+<form method="POST">
+  {% csrf_token %}
+  {{ booking_form.as_p }}
+  <button type="submit">Book Restaurant</button>
+</form>
+<p>Back to home page, <a href="/">home</a></p>
+{% endblock content %}

@@ -5,6 +5,7 @@
   {% for restaurant in restaurants %}
     <p>
       {{ restaurant.name }}
+      <a href="{% url 'table_booker:book-restaurant' restaurant.id %}">book restaurant</a>
     </p>
   {% empty %}
     <p>There are no records to show</p>
