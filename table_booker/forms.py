@@ -32,13 +32,22 @@ class UserForm(UserCreationForm):
 
 
 class BookingForm(forms.ModelForm):
+    date = forms.DateField(
+        input_formats=["%Y-%m-%dT%H:%M"],
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local", "class": "form-cotrol"},
+            format="%Y-%m-%dT%H:%M",
+        ),
+    )
+
     class Meta:
         model = Booking
         fields = ("table", "date")
 
     def clean(self):
         cleaned_data = super().clean()
-        date = cleaned_data["date"]
+        date = cleaned_data.get("date")
 
-        if date < timezone.now():
-            raise ValidationError("Date cannot be in the past")
+        if date:
+            if date < timezone.now():
+                raise ValidationError("Date cannot be in the past")

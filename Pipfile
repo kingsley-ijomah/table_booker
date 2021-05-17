@@ -7,6 +7,7 @@ verify_ssl = true
 isort = "==5.2.1"
 flake8 = "==3.8.3"
 black = "==19.10b0"
+factory-boy = "==2.12.0"
 
 [packages]
 django = "==3.0.8"
