@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "table_booker.apps.TableBookerConfig",
+    'django_nose',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'table_booker'
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=table_booker',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
