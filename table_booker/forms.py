@@ -32,7 +32,7 @@ class UserForm(UserCreationForm):
 
 
 class BookingForm(forms.ModelForm):
-    date = forms.DateField(
+    date = forms.DateTimeField(
         input_formats=["%Y-%m-%dT%H:%M"],
         widget=forms.DateTimeInput(
             attrs={"type": "datetime-local", "class": "form-cotrol"},

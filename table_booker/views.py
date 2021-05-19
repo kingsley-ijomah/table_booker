@@ -41,7 +41,7 @@ def book_restaurant(request, restaurant_id):
             return redirect("table_booker:home")
 
     else:
-        form = BookingForm
+        form = BookingForm()
 
     return render(
         request=request,

@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.http import response
 from django.template import context
 from django.test import TestCase
+from django.utils import timezone
 
 from .factories import RestaurantFactory, TableFactory, UserFactory
 from .forms import BookingForm, UserForm
@@ -119,3 +120,63 @@ class SignUpPageTests(TestCase):
         self.assertTrue(
             "Unsuccessful registration. Invalid information." in message.message
         )
+
+
+class LogoutPageTests(TestCase):
+    def setUp(self):
+        self.url = "/logout"
+        self.response = self.client.get(self.url, follow=True)
+
+    def test_logout(self):
+        message = list(self.response.context.get("messages"))[0]
+
+        self.assertEqual(message.tags, "info")
+        self.assertEqual(message.message, "You have successfully logged out.")
+        self.assertRedirects(self.response, "/login", status_code=302)
+
+
+class BookingRestaurantTests(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.restaurant = RestaurantFactory()
+        self.table = TableFactory(restaurant=self.restaurant)
+        self.url = f"/book-restaurant/{self.restaurant.id}"
+
+    def test_authentication(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_invalid_restaurant_id(self):
+        self.client.force_login(self.user)
+        url = "/book-restaurant/99999"
+
+        response = self.client.get(url, follow=True)
+        message = list(response.context.get("messages"))[0]
+
+        self.assertEqual(message.tags, "error")
+        self.assertTrue("Invalid restaurant supplied" in message.message)
+        self.assertRedirects(response, "/", status_code=302)
+
+    def test_get_blank_form(self):
+        self.client.force_login(self.user)
+        response = self.client.get(self.url, follow=True)
+        context_form = response.context["booking_form"]
+
+        self.assertTemplateUsed(response, "book_restaurant.html")
+        self.assertIsInstance(context_form, BookingForm)
+
+    def test_successful_post(self):
+        self.client.force_login(self.user)
+        data = {
+            "user": self.user,
+            "restaurant": self.restaurant.id,
+            "table": self.restaurant.tables.first().id,
+            "date": (datetime.datetime.today() + datetime.timedelta(days=3)).strftime(
+                "%Y-%m-%dT%H:%M"
+            ),
+        }
+        response = self.client.post(self.url, data, follow=True)
+        message = list(response.context.get("messages"))[0]
+        self.assertEqual(message.tags, "info")
+        self.assertTrue(f"You successfully booked {self.restaurant}" in message.message)
+        self.assertRedirects(response, "/", status_code=302)
