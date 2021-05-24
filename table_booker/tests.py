@@ -2,15 +2,11 @@
 import datetime
 
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.exceptions import ValidationError
-from django.http import response
-from django.template import context
 from django.test import TestCase
-from django.utils import timezone
 
 from .factories import RestaurantFactory, TableFactory, UserFactory
 from .forms import BookingForm, UserForm
-from .models import Restaurant
+from .models import Restaurant, Table
 
 
 class HomePageTests(TestCase):
@@ -180,3 +176,15 @@ class BookingRestaurantTests(TestCase):
         self.assertEqual(message.tags, "info")
         self.assertTrue(f"You successfully booked {self.restaurant}" in message.message)
         self.assertRedirects(response, "/", status_code=302)
+
+    def test_table_queryset(self):
+        TableFactory()
+
+        self.client.force_login(self.user)
+        response = self.client.get(self.url, follow=True)
+        context_form = response.context["booking_form"]
+
+        expected_queryset = context_form.fields["table"].queryset
+        queryset = Table.objects.filter(restaurant_id=self.restaurant.id)
+
+        self.assertEqual(list(expected_queryset), list(queryset))
