@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>My Bookings</h1>
+
+<table border=1 cellpadding=10>
+    <th>Restaurant</th>
+    <th>Table</th>
+    <th>Date</th>
+    <th>Actions</th>
+
+    {% for booking in bookings %}
+      <tr>
+        <td>{{ booking.restaurant.name }}</td>
+        <td>{{ booking.table.name }}</td>
+        <td>{{ booking.date }}</td>
+        <td><a href="">Delete</a> | <a href="">Update Booking</a></td>
+      </tr>
+    {% endfor %}
+</table>
+
+{% endblock content %}

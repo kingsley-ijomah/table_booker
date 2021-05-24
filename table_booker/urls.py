@@ -14,4 +14,5 @@ urlpatterns = [
         views.book_restaurant,
         name="book-restaurant",
     ),
+    path("my-bookings", views.my_bookings, name="my-bookings"),
 ]
