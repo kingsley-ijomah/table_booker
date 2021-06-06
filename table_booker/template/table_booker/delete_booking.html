@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Delete Booking</h1>
+
+<p> Are you sure you want to delete:</p>
+<p>{{ booking.restaurant.name }}</p>
+<p>{{ booking.restaurant.table.name }}</p>
+<p>{{ booking.date }}</p>
+
+<form method="POST">
+  {% csrf_token %}
+  <button type="submit">YES, DELETE BOOKING</button>
+</form>
+
+{% endblock content %}

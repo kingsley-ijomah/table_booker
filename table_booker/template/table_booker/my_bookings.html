@@ -15,7 +15,7 @@
         <td>{{ booking.restaurant.name }}</td>
         <td>{{ booking.table.name }}</td>
         <td>{{ booking.date }}</td>
-        <td><a href="">Delete</a> | <a href="">Update Booking</a></td>
+        <td><a href="/delete-booking/{{ booking.id }}">Delete</a> | <a href="/update-booking/{{ booking.id }}">Update Booking</a></td>
       </tr>
     {% endfor %}
 </table>

@@ -2,7 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import BookingForm, UserForm
 from .models import Booking, Restaurant
@@ -48,6 +48,40 @@ def book_restaurant(request, restaurant_id):
         template_name="book_restaurant.html",
         context={"booking_form": form},
     )
+
+
+def delete_booking(request, booking_id):
+    if not request.user.is_authenticated:
+        return redirect("table_booker:login")
+
+    booking = get_object_or_404(Booking, pk=booking_id)
+
+    if request.method == "POST":
+        booking.delete()
+        return redirect("table_booker:my-bookings")
+
+    return render(request, "delete_booking.html", context={"booking": booking})
+
+
+def update_booking(request, booking_id):
+    if not request.user.is_authenticated:
+        return redirect("table_booker:login")
+
+    booking = get_object_or_404(Booking, pk=booking_id)
+
+    booking_form = {"booking_form": BookingForm(booking.restaurant, instance=booking)}
+
+    if request.method == "POST":
+        form = BookingForm(booking.restaurant, request.POST, instance=booking)
+
+        if form.is_valid():
+            form.save()
+            messages.info(
+                request, f"You successfully updated {booking.restaurant.name} booking"
+            )
+            return redirect("table_booker:my-bookings")
+
+    return render(request, "update_booking.html", context=booking_form)
 
 
 def my_bookings(request):
