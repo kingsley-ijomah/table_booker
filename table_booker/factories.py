@@ -42,6 +42,7 @@ class BookingFactory(factory.django.DjangoModelFactory):
     restaurant = factory.SubFactory(RestaurantFactory)
     table = factory.SubFactory(TableFactory)
     date = datetime.date.today() + datetime.timedelta(days=1)  # tomorrow
+    total_guests = 3
 
 
 class BusinessHourFactory(factory.django.DjangoModelFactory):
