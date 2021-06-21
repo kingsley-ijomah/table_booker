@@ -61,6 +61,4 @@ class SettingFactory(factory.django.DjangoModelFactory):
         model = models.Setting
 
     restaurant = factory.SubFactory(RestaurantFactory)
-    advance_booking = 20
     min_guest = 2
-    max_guest = 12

@@ -59,9 +59,9 @@ class BusinessHour(models.Model):
 
 
 class Setting(models.Model):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-    advance_booking = models.IntegerField()
+    restaurant = models.OneToOneField(
+        Restaurant, on_delete=models.CASCADE, related_name="setting"
+    )
     min_guest = models.IntegerField()
-    max_guest = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
